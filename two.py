@@ -5,7 +5,7 @@ def polindrom (s):
     if s[:len(s)//2:1] == s[len(s):len(s)//2:-1]:
         return print("The String is polindrome")
     else:
-        return print("The String is non polindrome")
+        return print("The String is not polindrome")
 
 polindrom(string)
 
