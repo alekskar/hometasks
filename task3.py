@@ -71,7 +71,7 @@ def write_stat_to_json():
     }
 
     fdata = ['SNAPSHOT ' + str(sn_number) + ': ' + str(datetime.datetime.now().strftime(tf)), data]
-# writiong data to json
+
     with open('stat_log.json', 'a+') as log_json:
         json.dump(fdata, log_json, indent=4, sort_keys=True)
     sn_number+=1
