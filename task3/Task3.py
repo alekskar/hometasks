@@ -1,4 +1,4 @@
-import psutil,datetime,json,schedule,time,configparser
+import psutil,datetime,json,schedule,configparser,sys
 
 
 '''
@@ -13,6 +13,8 @@ config = configparser.ConfigParser()
 config.read('config')
 output_type = config.get('common', 'output')
 interval = config.get('common', 'interval')
+
+# human readable format
 
 def b2h(n):
     # http://code.activestate.com/recipes/578019
@@ -41,12 +43,14 @@ network = psutil.net_io_counters(pernic=False)[0:2]
 net1=b2h(network[0])
 net2=b2h(network[1])
 
-print("cpu time: ", cpu_time)
-print("Overal_mem_usage: ", mem_usage)
-print("virt_mem_usage: ", virtual_mem)
-print("disk_usage: ", io)
-print("network_usage: ", network)
+#print("cpu time: ", cpu_time)
+#print("Overal_mem_usage: ", mem_usage)
+#print("virt_mem_usage: ", virtual_mem)
+#print("disk_usage: ", io)
+#print("network_usage: ", network)
+
 sn_number=0
+
 def write_stat_to_txt():
     global sn_number
     with open("txt.log", "a") as txt_log:
@@ -59,6 +63,7 @@ def write_stat_to_txt():
         txt_log.close()
     sn_number+=1
 
+# writing data to json file
 
 def write_stat_to_json():
     global sn_number
@@ -72,9 +77,12 @@ def write_stat_to_json():
 
     fdata = ['SNAPSHOT ' + str(sn_number) + ': ' + str(datetime.datetime.now().strftime(tf)), data]
 
+
     with open('stat_log.json', 'a+') as log_json:
         json.dump(fdata, log_json, indent=4, sort_keys=True)
     sn_number+=1
+
+# define output file to process:
 
 def ch_type():
     if output_type == 'txt':
@@ -83,6 +91,8 @@ def ch_type():
     elif output_type == 'json':
         write_stat_to_json()
         #schedule.every(int(interval)).seconds.do(write_stat_to_json)
+    else:
+        sys.exit()
 
 schedule.every(int(interval)).seconds.do(ch_type)
 while True:
